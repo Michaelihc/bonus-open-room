@@ -1,0 +1,50 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "BONUS Open Room",
+  "colors": {
+    "primary": "#0F4C81",
+    "light": "#1B78C2",
+    "dark": "#0B3558"
+  },
+  "favicon": "/favicon-v3.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Docs",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": ["index", "quickstart", "development"]
+          }
+        ]
+      }
+    ],
+    "global": {}
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Michaelihc/bonus-open-room"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Repository",
+      "href": "https://github.com/Michaelihc/bonus-open-room"
+    }
+  },
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/Michaelihc/bonus-open-room"
+    }
+  }
+}

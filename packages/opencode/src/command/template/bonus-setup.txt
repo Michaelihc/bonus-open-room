@@ -1,0 +1,17 @@
+Prepare the repository for the BONUS workflow.
+
+Create or update this structure under `.bonus/`:
+- `source/` for closed-source SDKs, binaries, docs, and sample files the user is allowed to inspect
+- `spec/` for the canonical clean-room specification
+- `conformance/` for compatibility fixtures and test plans
+- `provenance/` for rights, scope, provenance, and process records
+- `implementation/` for the fresh reimplementation
+- `tests/` for tests that validate the fresh implementation
+- `docs/` for end-user and developer docs about the new implementation
+- `README.md` with short workflow instructions
+
+Rules:
+- Do not implement the replacement software in this command.
+- Do not modify any existing user-supplied artifacts inside `.bonus/source/`.
+- Seed minimal placeholder files only where they are missing, or carefully extend existing files if they are obviously placeholders.
+- Make the README explain the four-step flow: upload allowed materials, extract spec, reimplement from spec, receive the fresh codebase.

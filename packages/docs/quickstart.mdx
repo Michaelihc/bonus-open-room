@@ -1,0 +1,89 @@
+---
+title: "Quickstart"
+description: "Set up BONUS Open Room locally and understand the current clean-room workflow."
+---
+
+## Alpha and WIP warning
+
+<Warning>
+  This quickstart describes the current repository workflow, not a stable release process. Commands, UX, and docs may
+  change while the project is still in alpha.
+</Warning>
+
+## Get started
+
+### 1. Install dependencies
+
+```bash
+bun install
+```
+
+### 2. Run the backend
+
+```bash
+bun run --cwd packages/opencode --conditions=browser ./src/index.ts serve --port 4096
+```
+
+### 3. Run the app UI
+
+```bash
+bun --cwd packages/app dev -- --port 4444
+```
+
+Open `http://localhost:4444`.
+
+## BONUS flow
+
+### 1. Prepare `.bonus/`
+
+Create or confirm this structure:
+
+```text
+.bonus/
+  source/
+  spec/
+  conformance/
+  provenance/
+  implementation/
+  tests/
+  docs/
+  notes/
+```
+
+### 2. Run analysis work
+
+Use the analysis lane to inspect only allowed source materials and write:
+
+- `.bonus/spec/`
+- `.bonus/conformance/`
+- `.bonus/provenance/`
+- `.bonus/notes/`
+
+The analysis lane should not write implementation code.
+
+### 3. Run clean-room implementation work
+
+Use the clean-room lane to build from:
+
+- `.bonus/spec/`
+- `.bonus/conformance/`
+- `.bonus/provenance/`
+- `.bonus/README.md`
+
+The clean-room lane should not inspect `.bonus/source/`.
+
+### 4. Verify and document
+
+- Keep implementation under `.bonus/implementation/`
+- Keep tests under `.bonus/tests/`
+- Keep end-user and developer docs under `.bonus/docs/`
+- Record provenance and workflow notes as the implementation evolves
+
+## Docs preview
+
+To preview this docs site locally:
+
+```bash
+cd packages/docs
+mint dev
+```

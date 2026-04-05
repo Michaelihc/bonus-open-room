@@ -1,0 +1,64 @@
+---
+title: "Introduction"
+description: "BONUS Open Room is an experimental clean-room workflow built on OpenCode."
+---
+
+## Alpha notice
+
+<Warning>
+  BONUS Open Room is in alpha and the docs are still work in progress. Use this site as draft guidance, not as a
+  final product contract.
+</Warning>
+
+## What this fork does
+
+BONUS Open Room adds a structured `.bonus/` workspace and separated agent lanes for clean-room work:
+
+- The analysis lane can inspect allowed source materials and produce specs, conformance assets, provenance, and notes.
+- The clean-room lane is blocked from `.bonus/source/` and writes fresh implementation, tests, and docs from the spec.
+
+<Card title="Read the workflow" icon="diagram-project" href="/quickstart" horizontal>
+  Start with the current `.bonus/` flow, repo setup, and known limits.
+</Card>
+
+## Workspace layout
+
+```text
+.bonus/
+  README.md
+  source/
+  spec/
+  conformance/
+  provenance/
+  implementation/
+  tests/
+  docs/
+  notes/
+```
+
+<Columns cols={2}>
+  <Card title="Analysis lane" icon="magnifying-glass">
+    Reads allowed materials and writes clean-room artifacts.
+  </Card>
+  <Card title="Clean-room lane" icon="shield">
+    Builds from `.bonus/spec/` and `.bonus/conformance/` without consulting restricted inputs.
+  </Card>
+  <Card title="Local development" icon="terminal" href="/development">
+    Run the backend and app UI locally while the workflow is still evolving.
+  </Card>
+  <Card title="Known gaps" icon="triangle-exclamation">
+    Rebranding, packaging, and some docs still contain upstream or template content.
+  </Card>
+</Columns>
+
+## Current priorities
+
+- Make the BONUS clean-room workflow explicit in the UI and docs.
+- Keep provenance and lane boundaries visible.
+- Replace remaining template or upstream project language.
+- Document what is implemented now without overstating maturity.
+
+<Note>
+  If a page still reads like generic Mintlify starter content, treat it as unfinished and update it before relying on
+  it externally.
+</Note>

@@ -1,0 +1,20 @@
+Run the BONUS clean-room implementation lane.
+
+Inputs:
+- `@.bonus/spec/`
+- `@.bonus/conformance/`
+- `@.bonus/provenance/`
+
+Deliverables:
+- a fresh implementation under `.bonus/implementation/`
+- tests under `.bonus/tests/`
+- supporting docs under `.bonus/docs/`
+- provenance notes describing what was implemented from which clean-room inputs
+
+Rules:
+- Do not inspect `.bonus/source/` or any uploaded closed-source artifacts.
+- If the spec is incomplete, contradictory, or missing, stop and describe the exact gap instead of guessing.
+- Keep all implementation work confined to `.bonus/implementation/`, `.bonus/tests/`, `.bonus/docs/`, and `.bonus/README.md`.
+- Build against the spec and conformance assets only.
+
+If the inputs are not ready, say so clearly and do not start implementation.

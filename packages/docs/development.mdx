@@ -1,0 +1,58 @@
+---
+title: "Development"
+description: "Preview the BONUS Open Room docs locally and keep draft docs aligned with the repo."
+---
+
+## Alpha notice
+
+<Warning>
+  The docs workflow is still evolving. Treat local preview as a drafting tool, not proof that the docs are complete or
+  production-ready.
+</Warning>
+
+## Prerequisites
+
+- Node.js 19 or newer
+- `packages/docs/docs.json`
+- The local repository checkout for BONUS Open Room
+
+## Preview locally
+
+<Steps>
+  <Step title="Install the Mintlify CLI">
+
+  ```bash
+  npm i -g mint
+  ```
+
+  </Step>
+  <Step title="Start the docs preview">
+
+  ```bash
+  cd packages/docs
+  mint dev
+  ```
+
+  Open `http://localhost:3000`.
+
+  </Step>
+</Steps>
+
+## What to verify while editing
+
+- The top-level pages still carry clear alpha/WIP warnings.
+- The docs describe the implemented `.bonus/` workflow rather than generic starter content.
+- The local commands match the repo backend on port `4096` and app UI on port `4444`.
+- Links point at the BONUS Open Room repository instead of placeholder Mintlify destinations.
+
+## Useful commands
+
+```bash
+mint dev --port 3333
+mint broken-links
+```
+
+## Editing rule
+
+If a page still reads like starter content or upstream OpenCode copy, treat it as unfinished and replace it before
+calling the docs complete.

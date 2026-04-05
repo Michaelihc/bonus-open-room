@@ -1,0 +1,18 @@
+Run the BONUS analysis lane.
+
+Inputs:
+- `.bonus/source/`
+
+Deliverables:
+- `@.bonus/spec/` with a canonical human-readable specification
+- `@.bonus/conformance/` with compatibility fixtures, acceptance criteria, and test plans
+- `@.bonus/provenance/` with analysis notes, rights assumptions, and clean-room handoff material
+
+Rules:
+- Do not write implementation code.
+- Do not place code under `.bonus/implementation/`, `.bonus/tests/`, or `.bonus/docs/`.
+- Treat `.bonus/source/` as evidence. Read it without editing it.
+- Capture observable behavior, interfaces, formats, workflows, invariants, compatibility constraints, and known unknowns.
+- When helpful, convert findings into executable or semi-executable conformance assets.
+
+If `.bonus/source/` is missing or empty, stop and explain what the user needs to upload there.

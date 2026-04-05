@@ -1,0 +1,10 @@
+Refresh the BONUS provenance and shipping record.
+
+Update the materials under `@.bonus/provenance/` to summarize:
+- what closed-source materials were analyzed
+- what spec and conformance artifacts were produced
+- what clean-room implementation outputs now exist
+- remaining legal, technical, or compatibility unknowns
+- what can and cannot be shipped under open-source terms based on the current record
+
+Keep this focused on provenance, scope, and evidence. Do not implement product code in this command.
