@@ -1,7 +1,4 @@
-Powered By:
-<p align="center">
-  <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="BONUS Open Room logo">
-</p>
+<img width="2079" height="897" alt="image" src="https://github.com/user-attachments/assets/63f63960-59fe-4189-a1d1-2c35707bd5e4" />
 
 # BONUS Open Room
 
