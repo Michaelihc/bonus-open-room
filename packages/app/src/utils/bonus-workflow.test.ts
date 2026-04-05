@@ -33,6 +33,19 @@ describe("bonus workflow helpers", () => {
     })
   })
 
+  test("normalizes trailing separators in absolute permission paths", () => {
+    const rules = createBonusSessionPermissions({
+      directory: "C:\\repo\\",
+      preset: "analysis",
+    })
+
+    expect(rules).toContainEqual({
+      permission: "read",
+      action: "deny",
+      pattern: `C:/repo/${BONUS_IMPLEMENTATION_DIR}`,
+    })
+  })
+
   test("locks the cleanroom lane away from source materials and shell access", () => {
     const rules = createBonusSessionPermissions({
       directory: "C:\\repo",

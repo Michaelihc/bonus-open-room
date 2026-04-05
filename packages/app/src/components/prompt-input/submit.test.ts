@@ -2,6 +2,7 @@ import { beforeAll, beforeEach, describe, expect, mock, test } from "bun:test"
 import type { Prompt } from "@/context/prompt"
 
 let createPromptSubmit: typeof import("./submit").createPromptSubmit
+let sendFollowupDraft: typeof import("./submit").sendFollowupDraft
 
 const createdClients: string[] = []
 const createdSessions: string[] = []
@@ -199,6 +200,7 @@ beforeAll(async () => {
 
   const mod = await import("./submit")
   createPromptSubmit = mod.createPromptSubmit
+  sendFollowupDraft = mod.sendFollowupDraft
 })
 
 beforeEach(() => {
@@ -342,5 +344,123 @@ describe("prompt submit worktree selection", () => {
 
     expect(storedSessions["/repo/worktree-a"]).toEqual([{ id: "session-1", title: "New session 1" }])
     expect(optimisticSeeded).toEqual([true])
+  })
+})
+
+describe("send followup draft", () => {
+  test("removes optimistic state when worktree wait blocks the send", async () => {
+    type Input = Parameters<typeof sendFollowupDraft>[0]
+
+    const status: string[] = []
+    const optimistic = { add: 0, remove: 0 }
+    let calls = 0
+
+    const result = await sendFollowupDraft({
+      client: {
+        session: {
+          promptAsync: async () => {
+            calls += 1
+            return { data: undefined }
+          },
+        },
+      } as unknown as Input["client"],
+      globalSync: {
+        child: () => [
+          {},
+          (...args: unknown[]) => {
+            if (args[0] !== "session_status") return
+            const next = args[2] as { type: string }
+            status.push(next.type)
+          },
+        ],
+      } as unknown as Input["globalSync"],
+      sync: {
+        data: { command: [] },
+        session: {
+          optimistic: {
+            add: () => {
+              optimistic.add += 1
+            },
+            remove: () => {
+              optimistic.remove += 1
+            },
+          },
+        },
+      } as unknown as Input["sync"],
+      draft: {
+        sessionID: "session-1",
+        sessionDirectory: "/repo/main",
+        prompt: [{ type: "text", content: "hello", start: 0, end: 5 }],
+        context: [],
+        agent: "agent",
+        model: { providerID: "provider", modelID: "model" },
+      },
+      messageID: "message-1",
+      optimisticBusy: true,
+      before: () => false,
+    })
+
+    expect(result).toBe(false)
+    expect(calls).toBe(0)
+    expect(optimistic).toEqual({ add: 1, remove: 1 })
+    expect(status).toEqual(["busy", "idle"])
+  })
+
+  test("cleans optimistic state when promptAsync fails", async () => {
+    type Input = Parameters<typeof sendFollowupDraft>[0]
+
+    const status: string[] = []
+    const optimistic = { add: 0, remove: 0 }
+    let calls = 0
+
+    await expect(
+      sendFollowupDraft({
+        client: {
+          session: {
+            promptAsync: async () => {
+              calls += 1
+              throw new Error("boom")
+            },
+          },
+        } as unknown as Input["client"],
+        globalSync: {
+          child: () => [
+            {},
+            (...args: unknown[]) => {
+              if (args[0] !== "session_status") return
+              const next = args[2] as { type: string }
+              status.push(next.type)
+            },
+          ],
+        } as unknown as Input["globalSync"],
+        sync: {
+          data: { command: [] },
+          session: {
+            optimistic: {
+              add: () => {
+                optimistic.add += 1
+              },
+              remove: () => {
+                optimistic.remove += 1
+              },
+            },
+          },
+        } as unknown as Input["sync"],
+        draft: {
+          sessionID: "session-1",
+          sessionDirectory: "/repo/main",
+          prompt: [{ type: "text", content: "hello", start: 0, end: 5 }],
+          context: [],
+          agent: "agent",
+          model: { providerID: "provider", modelID: "model" },
+        },
+        messageID: "message-2",
+        optimisticBusy: true,
+      }),
+    ).rejects.toThrow("boom")
+
+    expect(calls).toBe(1)
+    expect(optimistic).toEqual({ add: 1, remove: 1 })
+    expect(status).toEqual(["busy", "idle"])
   })
 })

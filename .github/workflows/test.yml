@@ -146,3 +146,59 @@ jobs:
             packages/app/e2e/junit-*.xml
             packages/app/e2e/test-results
             packages/app/e2e/playwright-report
+
+  e2e-built:
+    name: e2e built (linux)
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.playwright-browsers
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+
+      - name: Read Playwright version
+        id: playwright-version
+        run: |
+          version=$(node -e 'console.log(require("./packages/app/package.json").devDependencies["@playwright/test"])')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.playwright-browsers
+          key: ${{ runner.os }}-${{ runner.arch }}-playwright-${{ steps.playwright-version.outputs.version }}-chromium
+
+      - name: Install Playwright system dependencies
+        working-directory: packages/app
+        run: bunx playwright install-deps chromium
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        working-directory: packages/app
+        run: bunx playwright install chromium
+
+      - name: Run built app e2e tests
+        run: bun --cwd packages/app test:e2e:build
+        env:
+          CI: true
+        timeout-minutes: 30
+
+      - name: Upload built Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-built-linux-${{ github.run_attempt }}
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            packages/app/e2e/test-results
+            packages/app/e2e/playwright-report

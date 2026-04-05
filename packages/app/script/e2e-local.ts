@@ -53,6 +53,7 @@ const extraArgs = (() => {
 })()
 
 const [serverPort, webPort] = await Promise.all([freePort(), freePort()])
+const built = process.env.OPENCODE_E2E_BUILD === "1"
 
 const sandbox = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-e2e-"))
 const keepSandbox = process.env.OPENCODE_E2E_KEEP_SANDBOX === "1"
@@ -83,9 +84,16 @@ const runnerEnv = {
   VITE_OPENCODE_SERVER_HOST: "127.0.0.1",
   VITE_OPENCODE_SERVER_PORT: String(serverPort),
   PLAYWRIGHT_PORT: String(webPort),
+  ...(built
+    ? {
+        PLAYWRIGHT_WEB_SERVER_COMMAND: `bun run serve -- --host 0.0.0.0 --port ${webPort}`,
+        PLAYWRIGHT_REUSE_WEB_SERVER: "0",
+      }
+    : {}),
 } satisfies Record<string, string>
 
 let seed: ReturnType<typeof Bun.spawn> | undefined
+let build: ReturnType<typeof Bun.spawn> | undefined
 let runner: ReturnType<typeof Bun.spawn> | undefined
 let server: { stop: () => Promise<void> | void } | undefined
 let inst: { Instance: { disposeAll: () => Promise<void> | void } } | undefined
@@ -96,6 +104,7 @@ const cleanup = async () => {
   cleaned = true
 
   if (seed && seed.exitCode === null) seed.kill("SIGTERM")
+  if (build && build.exitCode === null) build.kill("SIGTERM")
   if (runner && runner.exitCode === null) runner.kill("SIGTERM")
 
   const jobs = [
@@ -143,6 +152,20 @@ try {
   if (seedExit !== 0) {
     code = seedExit
   } else {
+    if (built) {
+      build = Bun.spawn(["bun", "run", "build"], {
+        cwd: appDir,
+        env: runnerEnv,
+        stdout: "inherit",
+        stderr: "inherit",
+      })
+      const buildExit = await build.exited
+      if (buildExit !== 0) {
+        code = buildExit
+        throw new Error("Built app verification failed during vite build")
+      }
+    }
+
     Object.assign(process.env, serverEnv)
     process.env.AGENT = "1"
     process.env.OPENCODE = "1"

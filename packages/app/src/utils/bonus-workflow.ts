@@ -1,4 +1,3 @@
-import path from "path"
 import type { PermissionRuleset } from "@opencode-ai/sdk/v2/client"
 
 export const BONUS_ROOT = ".bonus"
@@ -19,7 +18,9 @@ function normalizeAbsolute(input: string) {
 }
 
 function absolutePath(directory: string, relativePath: string) {
-  return normalizeAbsolute(path.join(directory, relativePath))
+  const root = normalizeAbsolute(directory).replace(/\/+$/, "")
+  const child = normalizeAbsolute(relativePath).replace(/^\/+/, "")
+  return `${root}/${child}`
 }
 
 function absoluteTree(directory: string, relativePath: string) {

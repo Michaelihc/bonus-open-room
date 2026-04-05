@@ -4,8 +4,11 @@ const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`
 const serverHost = process.env.PLAYWRIGHT_SERVER_HOST ?? "127.0.0.1"
 const serverPort = process.env.PLAYWRIGHT_SERVER_PORT ?? "4096"
-const command = `bun run dev -- --host 0.0.0.0 --port ${port}`
-const reuse = !process.env.CI
+const command = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? `bun run dev -- --host 0.0.0.0 --port ${port}`
+const reuse =
+  process.env.PLAYWRIGHT_REUSE_WEB_SERVER !== undefined
+    ? process.env.PLAYWRIGHT_REUSE_WEB_SERVER === "1"
+    : !process.env.CI
 const workers = Number(process.env.PLAYWRIGHT_WORKERS ?? (process.env.CI ? 5 : 0)) || undefined
 const reporter = [["html", { outputFolder: "e2e/playwright-report", open: "never" }], ["line"]] as const
 

@@ -19,6 +19,7 @@
     "test:unit": "bun test --preload ./happydom.ts ./src",
     "test:unit:watch": "bun test --watch --preload ./happydom.ts ./src",
     "test:e2e": "playwright test",
+    "test:e2e:build": "bun script/e2e-build.ts",
     "test:e2e:local": "bun script/e2e-local.ts",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "playwright show-report e2e/playwright-report"
