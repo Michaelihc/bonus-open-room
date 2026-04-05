@@ -1,3 +1,4 @@
+Powered By:
 <p align="center">
   <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="BONUS Open Room logo">
 </p>
